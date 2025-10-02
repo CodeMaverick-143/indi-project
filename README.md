@@ -2,6 +2,12 @@
 
 A modern, full-stack web application for threaded comments with user authentication, built with React, Node.js, Express, and MongoDB.
 
+## 🚀 Live Demo
+
+- **Frontend (React App)**: [https://indi-project-orcin.vercel.app/](https://indi-project-orcin.vercel.app/)
+- **Backend API**: [https://indi-project-arix.onrender.com](https://indi-project-arix.onrender.com)
+- **API Health Check**: [https://indi-project-arix.onrender.com/api/health](https://indi-project-arix.onrender.com/api/health)
+
 ## Features
 
 - **User Authentication**: Secure registration and login system with JWT tokens
@@ -126,6 +132,30 @@ indi-project/
    cd frontend
    npm run build
    ```
+
+## 🌐 Deployment
+
+This project is deployed using:
+
+### Frontend (Vercel)
+- **URL**: [https://indi-project-orcin.vercel.app/](https://indi-project-orcin.vercel.app/)
+- **Platform**: Vercel
+- **Build Command**: `npm run build`
+- **Output Directory**: `dist`
+
+### Backend (Render)
+- **URL**: [https://indi-project-arix.onrender.com](https://indi-project-arix.onrender.com)
+- **Platform**: Render
+- **Build Command**: `npm install && npm run build`
+- **Start Command**: `npm start`
+
+### Environment Variables (Backend)
+Make sure to set these environment variables in your deployment platform:
+```env
+DATABASE_URL=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
+PORT=5001
+```
 
 ## API Endpoints
 

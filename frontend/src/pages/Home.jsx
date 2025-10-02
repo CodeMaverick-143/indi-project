@@ -1,9 +1,10 @@
-import { useEffect, useState, useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import React, { useState, useEffect } from "react";
 import Comment from "../components/Comment";
+import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config/api";
 
 export default function Home() {
-  const { token } = useContext(AuthContext);
+  const { token } = useAuth();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [page, setPage] = useState(0);
@@ -16,7 +17,7 @@ export default function Home() {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5001/api/comments?limit=${limit}&skip=${page * limit}`
+        `${API_BASE_URL}/api/comments?limit=${limit}&skip=${page * limit}`
       );
       const data = await res.json();
       setComments(data.comments || []);
@@ -41,7 +42,7 @@ export default function Home() {
 
     setPosting(true);
     try {
-      const res = await fetch("http://localhost:5001/api/comments", {
+      const res = await fetch(`${API_BASE_URL}/api/comments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +67,7 @@ export default function Home() {
 
   const handleReply = async (parentId, text) => {
     try {
-      const res = await fetch(`http://localhost:5001/api/comments/${parentId}/reply`, {
+      const res = await fetch(`${API_BASE_URL}/api/comments/${parentId}/reply`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -88,7 +89,7 @@ export default function Home() {
 
   const handleLike = async (commentId) => {
     try {
-      const res = await fetch(`http://localhost:5001/api/comments/${commentId}/like`, {
+      const res = await fetch(`${API_BASE_URL}/api/comments/${commentId}/like`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
