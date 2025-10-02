@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "prisma generate"
+    "build": "npm install && npx prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.9.1",
