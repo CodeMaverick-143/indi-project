@@ -2,7 +2,7 @@
 
 A modern, full-stack web application for threaded comments with user authentication, built with React, Node.js, Express, and MongoDB.
 
-## 🚀 Live Demo
+## Live Demo
 
 - **Frontend (React App)**: [https://indi-project-orcin.vercel.app/](https://indi-project-orcin.vercel.app/)
 - **Backend API**: [https://indi-project-arix.onrender.com](https://indi-project-arix.onrender.com)
