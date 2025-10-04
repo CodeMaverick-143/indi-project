@@ -6,11 +6,11 @@ const router = express.Router()
 
 router.get("/", optionalAuth, async (req, res) => {
   try {
-        const limit = parseInt(req.query.limit) || undefined
-    const skip = parseInt(req.query.skip) || undefined
+    const limit = parseInt(req.query.limit) || 10
+    const skip = parseInt(req.query.skip) || 0
     const rootOnly = req.query.rootOnly === "true"
 
-        const queryOptions = {
+    const queryOptions = {
       include: {
         user: {
           select: {
@@ -24,34 +24,33 @@ router.get("/", optionalAuth, async (req, res) => {
       },
     }
 
-        if (limit) queryOptions.take = limit
+    if (limit) queryOptions.take = limit
     if (skip) queryOptions.skip = skip
 
-        const comments = await prisma.comment.findMany(queryOptions)
+    const comments = await prisma.comment.findMany(queryOptions)
+    const totalCount = await prisma.comment.count()
 
-        const totalCount = await prisma.comment.count()
-
-        if (rootOnly) {
+    if (rootOnly) {
       const rootComments = comments.filter((c) => !c.parentId).map((c) => ({ ...c, replies: [] }))
       return res.json({
         comments: rootComments,
         pagination: {
           total: totalCount,
-          limit: limit || totalCount,
-          skip: skip || 0,
+          limit: limit,
+          skip: skip,
           hasMore: skip + limit < totalCount,
         },
       })
     }
 
-        const commentMap = {}
+    const commentMap = {}
     const rootComments = []
 
-        comments.forEach((comment) => {
+    comments.forEach((comment) => {
       commentMap[comment.id] = { ...comment, replies: [] }
     })
 
-        comments.forEach((comment) => {
+    comments.forEach((comment) => {
       if (comment.parentId && commentMap[comment.parentId]) {
         commentMap[comment.parentId].replies.push(commentMap[comment.id])
       } else if (!comment.parentId) {
@@ -63,9 +62,9 @@ router.get("/", optionalAuth, async (req, res) => {
       comments: rootComments,
       pagination: {
         total: totalCount,
-        limit: limit || totalCount,
-        skip: skip || 0,
-        hasMore: limit && skip !== undefined ? skip + limit < totalCount : false,
+        limit: limit,
+        skip: skip,
+        hasMore: skip + limit < totalCount,
       },
     })
   } catch (error) {

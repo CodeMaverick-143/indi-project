@@ -7,21 +7,15 @@ export default function Home() {
   const { token } = useAuth();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
-  const [page, setPage] = useState(0);
-  const [pagination, setPagination] = useState(null);
   const [loading, setLoading] = useState(false);
   const [posting, setPosting] = useState(false);
-  const limit = 10;
 
   const fetchComments = async () => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `${API_BASE_URL}/api/comments?limit=${limit}&skip=${page * limit}`
-      );
+      const res = await fetch(`${API_BASE_URL}/api/comments`);
       const data = await res.json();
       setComments(data.comments || []);
-      setPagination(data.pagination);
     } catch (error) {
       console.error("Failed to fetch comments:", error);
     } finally {
@@ -31,7 +25,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchComments();
-  }, [page]);
+  }, []);
 
   const handlePost = async () => {
     if (!token) {
@@ -53,7 +47,7 @@ export default function Home() {
 
       if (res.ok) {
         setNewComment("");
-        setPage(0);         fetchComments();
+        fetchComments();
       } else {
         const data = await res.json();
         alert(data.error || "Failed to post comment");
@@ -161,29 +155,6 @@ export default function Home() {
           )}
         </div>
 
-        {pagination && (
-          <div className="flex justify-between items-center mt-8 bg-white rounded-lg shadow-md p-4">
-            <button
-              onClick={() => setPage(page - 1)}
-              disabled={page === 0}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition"
-            >
-              ← Previous
-            </button>
-            
-            <span className="text-gray-600">
-              Page {page + 1} {pagination.total && `of ${Math.ceil(pagination.total / limit)}`}
-            </span>
-            
-            <button
-              onClick={() => setPage(page + 1)}
-              disabled={!pagination.hasMore}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition"
-            >
-              Next →
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
